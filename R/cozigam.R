@@ -170,7 +170,7 @@ COZIGAM.cts <- function(formula, zero.delta, maxiter = 20, conv.crit.in = 1e-5,
                 }  
 
                 mu <- linkinv(eta)
-                p <- .Call("logit_linkinv", alpha + gp, PACKAGE = "stats")
+                p <- .Call(stats:::C_logit_linkinv, alpha + gp, PACKAGE = "stats")
                 norm.in <- sum((b-b.old)^2)
                 rep.in <- rep.in + 1
             }   
@@ -192,7 +192,7 @@ COZIGAM.cts <- function(formula, zero.delta, maxiter = 20, conv.crit.in = 1e-5,
             for(k in 1:n.smooth) {
                 gp <- gp + delta[k]*eta.p[[k]]
             }  
-            p <- .Call("logit_linkinv", alpha + gp, PACKAGE = "stats")
+            p <- .Call(stats:::C_logit_linkinv, alpha + gp, PACKAGE = "stats")
   
             if(is.null(Eta)) norm.out <- abs(alpha-alpha.old) # actually only one outer iteration
             else norm.out <- max(abs(alpha-alpha.old), abs(delta-delta.old))
@@ -474,7 +474,7 @@ COZIGAM.dis <- function(formula, zero.delta, maxiter = 20, conv.crit.in = 1e-5,
                 }  
 
                 mu <- linkinv(eta)
-                p <- .Call("logit_linkinv", alpha + gp, PACKAGE = "stats")
+                p <- .Call(stats:::C_logit_linkinv, alpha + gp, PACKAGE = "stats")
                 norm.in <- sum((b-b.old)^2)
                 rep.in <- rep.in + 1
             }   
@@ -496,7 +496,7 @@ COZIGAM.dis <- function(formula, zero.delta, maxiter = 20, conv.crit.in = 1e-5,
             for(k in 1:n.smooth) {
                 gp <- gp + delta[k]*eta.p[[k]]
             }  
-            p <- .Call("logit_linkinv", alpha + gp, PACKAGE = "stats")
+            p <- .Call(stats:::C_logit_linkinv, alpha + gp, PACKAGE = "stats")
   
             if(is.null(Eta)) norm.out <- abs(alpha-alpha.old) 
             else norm.out <- max(abs(alpha-alpha.old), abs(delta-delta.old))
@@ -754,7 +754,7 @@ PCOZIGAM.cts <- function(formula, maxiter = 20, conv.crit.in = 1e-5,
                 eta1 <- G$X%*%b + offs 
                 eta2 <- delta*eta1
                 mu <- linkinv(eta1)
-                p <- .Call("logit_linkinv", eta2+alpha, PACKAGE = "stats")
+                p <- .Call(stats:::C_logit_linkinv, eta2+alpha, PACKAGE = "stats")
                 norm.in <- sum((b-b.old)^2)
                 rep.in <- rep.in + 1
             }   
@@ -770,7 +770,7 @@ PCOZIGAM.cts <- function(formula, maxiter = 20, conv.crit.in = 1e-5,
 
             ## Update p for new alpha & delta
             eta2 <- delta*eta1
-            p <- .Call("logit_linkinv", eta2+alpha, PACKAGE = "stats")
+            p <- .Call(stats:::C_logit_linkinv, eta2+alpha, PACKAGE = "stats")
   
             norm.out <- max(abs(alpha-alpha.old), abs(delta-delta.old))
             rep.out <- rep.out + 1
@@ -991,7 +991,7 @@ PCOZIGAM.dis <- function(formula, maxiter = 20, conv.crit.in = 1e-5,
                 eta1 <- G$X%*%b + offs 
                 eta2 <- delta*eta1
                 mu <- linkinv(eta1)
-                p <- .Call("logit_linkinv", eta2+alpha, PACKAGE = "stats")
+                p <- .Call(stats:::C_logit_linkinv, eta2+alpha, PACKAGE = "stats")
                 norm.in <- sum((b-b.old)^2)
                 rep.in <- rep.in + 1
             
@@ -1008,7 +1008,7 @@ PCOZIGAM.dis <- function(formula, maxiter = 20, conv.crit.in = 1e-5,
 
             ## Update p for new alpha & delta
             eta2 <- delta*eta1
-            p <- .Call("logit_linkinv", eta2+alpha, PACKAGE = "stats")
+            p <- .Call(stats:::C_logit_linkinv, eta2+alpha, PACKAGE = "stats")
             
             norm.out <- max(abs(alpha-alpha.old), abs(delta-delta.old))
             rep.out <- rep.out + 1
@@ -1410,13 +1410,13 @@ predict.cozigam <- function(object, newdata, type="link", se.fit=FALSE, ...)
           eta.fit <- apply(fit, 1, sum) + b[1]
           mu <- linkinv(eta.fit)
           eta.p <- alpha + delta*eta.fit
-          p <- .Call("logit_linkinv", eta.p, PACKAGE = "stats")
+          p <- .Call(stats:::C_logit_linkinv, eta.p, PACKAGE = "stats")
       }
       else {
           eta.fit <- apply(fit, 1, sum) + b[1]
           mu <- linkinv(eta.fit)
           eta.p <- alpha + apply(t(t(fit)*delta), 1, sum)
-          p <- .Call("logit_linkinv", eta.p, PACKAGE = "stats")
+          p <- .Call(stats:::C_logit_linkinv, eta.p, PACKAGE = "stats")
       }
 
       if(se.fit) {
